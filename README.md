@@ -27,7 +27,8 @@ PharmMarket.configure do |config|
 end
 
 client = PharmMarket::Client.new(id: 1, fd: '1', fpd: '2', sum: 3)
-client.create
+response = client.create
+response.conflict?
 ```
 
 ## Development
