@@ -12,7 +12,7 @@ class Response
   end
 
   def conflict?
-    !success?
+    !success? && (body.try(:[], :error) || []).find { |error| error.match?('уже зарегистрирован') }.present?
   end
 
   def success?
