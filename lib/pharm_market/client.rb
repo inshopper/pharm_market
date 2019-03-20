@@ -1,9 +1,10 @@
 module PharmMarket
   class Client
-    attr_reader :data
+    attr_reader :data, :logger
 
     def initialize(options)
       @data = OpenStruct.new(options)
+      @logger = PharmMarket.configuration.logger
       validate_keys
     end
 
@@ -14,6 +15,7 @@ module PharmMarket
           req.headers['Authorization'] = "Bearer #{PharmMarket.configuration.token}"
           req.body = data.to_h.except(:id).to_json
         end
+        logger.clear_tags! if logger.respond_to?(:clear_tags!)
         Response.new(response)
       end
     end
@@ -24,7 +26,7 @@ module PharmMarket
       @connection ||= ::Faraday.new(url: PharmMarket.configuration.host) do |faraday|
         faraday.response :json, parser_options: { symbolize_names: true }
         faraday.use Faraday::Request::UrlEncoded
-        faraday.use Faraday::Response::Logger, PharmMarket.configuration.logger,
+        faraday.use Faraday::Response::Logger, logger,
                     bodies: PharmMarket.configuration.log_bodies
         faraday.options.open_timeout = 2
         faraday.options.timeout = 5
@@ -39,8 +41,8 @@ module PharmMarket
 
     def log
       response = yield
-      PharmMarket.configuration.logger.info(id: data.id, body: response.body, code: response.status,
-                                            conflict: response.conflict?)
+      logger.info(id: data.id, body: response.body, code: response.status,
+                  conflict: response.conflict?)
       response
     end
   end
