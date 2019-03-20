@@ -16,6 +16,20 @@ Or install it yourself as:
 
     $ gem install pharm_market
 
+## Usage
+
+```ruby
+PharmMarket.configure do |config|
+  config.host = 'YOUR_HOST'
+  config.token = 'YOUR_TOKEN'
+  config.logger = Logger.new('your_log_file.log')
+  config.log_bodies = true
+end
+
+client = PharmMarket::Client.new(id: 1, fd: '1', fpd: '2', sum: 3)
+client.create
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
