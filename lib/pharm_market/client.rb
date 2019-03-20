@@ -15,7 +15,6 @@ module PharmMarket
           req.headers['Authorization'] = "Bearer #{PharmMarket.configuration.token}"
           req.body = data.to_h.except(:id).to_json
         end
-        logger.clear_tags! if logger.respond_to?(:clear_tags!)
         Response.new(response)
       end
     end
@@ -40,7 +39,9 @@ module PharmMarket
     end
 
     def log
+      logger.push_tags("id: #{data.id}") if logger.respond_to?(:push_tags)
       response = yield
+      logger.clear_tags! if logger.respond_to?(:clear_tags!)
       logger.info(id: data.id, body: response.body, code: response.status,
                   conflict: response.conflict?)
       response
