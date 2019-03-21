@@ -6,6 +6,7 @@ module PharmMarket
       @data = OpenStruct.new(options)
       @logger = PharmMarket.configuration.logger
       validate_keys
+      data.sum = data.sum.to_i
     end
 
     def create
