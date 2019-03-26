@@ -18,6 +18,8 @@ module PharmMarket
         end
         Response.new(response)
       end
+    ensure
+      logger.clear_tags! if logger.respond_to?(:clear_tags!)
     end
 
     private
