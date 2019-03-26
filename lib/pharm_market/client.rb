@@ -44,9 +44,9 @@ module PharmMarket
     def log
       logger.push_tags("id: #{data.id}") if logger.respond_to?(:push_tags)
       response = yield
-      logger.clear_tags! if logger.respond_to?(:clear_tags!)
       logger.info(id: data.id, body: response.body, code: response.status,
                   conflict: response.conflict?)
+      logger.clear_tags! if logger.respond_to?(:clear_tags!)
       response
     end
   end
