@@ -18,8 +18,6 @@ module PharmMarket
         end
         Response.new(response)
       end
-    ensure
-      logger.clear_tags! if logger.respond_to?(:clear_tags!)
     end
 
     private
@@ -46,8 +44,9 @@ module PharmMarket
       response = yield
       logger.info(id: data.id, body: response.body, code: response.status,
                   conflict: response.conflict?)
-      logger.clear_tags! if logger.respond_to?(:clear_tags!)
       response
+    ensure
+      logger.clear_tags! if logger.respond_to?(:clear_tags!)
     end
   end
 end
