@@ -7,15 +7,21 @@ class Response
     @response = response
   end
 
-  def good?
-    status == 200
-  end
-
   def conflict?
-    !success? && (body.try(:[], :error) || []).find { |error| error.match?('уже зарегистрирован') }.present?
+    failure? && conflict_error?
   end
 
-  def success?
-    good? && body.try(:[], :success).present?
+  def error?
+    failure? && body.try(:[], :error).present? && !conflict_error?
+  end
+
+  private
+
+  def conflict_error?
+    (body.try(:[], :error) || []).find { |error| error.match?('уже зарегистрирован') }.present?
+  end
+
+  def failure?
+    body.try(:[], :success).blank?
   end
 end
