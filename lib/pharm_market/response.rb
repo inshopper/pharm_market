@@ -12,7 +12,7 @@ class Response
   end
 
   def error?
-    failure? && body.try(:[], :error).present? && !conflict_error?
+    failure? && !conflict_error?
   end
 
   private
