@@ -18,7 +18,9 @@ class Response
   private
 
   def conflict_error?
-    (body.try(:[], :error) || []).find { |error| error.match?('уже зарегистрирован') }.present?
+    err = body.try(:[], :error)
+    return err.match?('уже зарегистрирован') if err.is_a?(String)
+    (err || []).find { |error| error.match?('уже зарегистрирован') }.present?
   end
 
   def failure?
